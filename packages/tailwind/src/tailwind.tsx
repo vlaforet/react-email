@@ -179,8 +179,8 @@ export const Tailwind: React.FC<TailwindProps> = ({ children, config }) => {
     if (
       element.type === "head" ||
       (typeof element.type === "function" &&
-        "displayName" in element.type &&
-        element.type.displayName === "Head")
+        "name" in element.type &&
+        element.type.name === "Head")
     ) {
       headElementIndex = i;
     }
