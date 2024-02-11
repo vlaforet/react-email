@@ -5,6 +5,14 @@
   "main": "src/index.js",
   "type": "module",
   "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run"
+  },
   "dependencies": {
     "commander": "9.4.1",
     "fs-extra": "11.1.1",
