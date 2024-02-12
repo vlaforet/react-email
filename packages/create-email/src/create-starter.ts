@@ -1,31 +1,13 @@
 import { fileURLToPath } from "node:url";
-import fse from "fs-extra";
-import logSymbols from "log-symbols";
-import treeCli from "tree-cli";
-import ora from "ora";
+import fs from "node:fs/promises";
 import path from "node:path";
 
-export const createStarter = async (relativeProjectPath: string) => {
-  const spinner = ora("Preparing files...\n").start();
-
-  let projectPath = path.resolve(process.cwd(), relativeProjectPath).trim();
-
+export const createStarter = async (absoluteProjectPath: string) => {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const templatePath = path.resolve(__dirname, "../template");
-  const resolvedProjectPath = path.resolve(projectPath);
+  const resolvedProjectPath = path.resolve(absoluteProjectPath);
 
-  await fse.copy(templatePath, resolvedProjectPath, { recursive: true });
+  await fs.cp(templatePath, resolvedProjectPath, { recursive: true });
 
-  const { report } = await treeCli({
-    l: 4,
-    base: projectPath,
-  });
-
-  console.log(report);
-
-  spinner.stopAndPersist({
-    symbol: logSymbols.success,
-    text: "React Email Starter files ready",
-  });
+  return absoluteProjectPath;
 };
-
