@@ -1,8 +1,8 @@
 import path from "node:path";
-import fs from "node:fs";
 import prompts from "prompts";
 import { getMonorepoMetadata } from "./monorepos/get-monorepo-metadata";
 import { isGlob } from "./globs/is-glob";
+import { isFirstDepthGlob } from "./globs/is-first-depth-glob";
 
 export const askUserThroughPrompts = async () => {
   const { relativeProjectPath } = await prompts({
@@ -17,11 +17,9 @@ export const askUserThroughPrompts = async () => {
   const monorepoMetadata = await getMonorepoMetadata(process.cwd());
   if (typeof monorepoMetadata !== "undefined") {
     const globOnlyWorkspaces = monorepoMetadata.workspaceGlobs.filter(isGlob);
-    const regex = /\*$/;
+
     // only globs like packages/*
-    const firstDepthGlobOnlyWorkspaces = globOnlyWorkspaces.filter(
-      (glob) => glob.split("*").length === 2 && regex.test(glob),
-    );
+    const firstDepthGlobOnlyWorkspaces = globOnlyWorkspaces.filter(isFirstDepthGlob);
 
     if (firstDepthGlobOnlyWorkspaces.length > 0) {
       const { shouldAddAsWorkspaceAnswer } = await prompts({
