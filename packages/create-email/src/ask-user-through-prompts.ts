@@ -7,7 +7,7 @@ import { isGlob } from "./globs/is-glob";
 import { isFirstDepthGlob } from "./globs/is-first-depth-glob";
 
 export const askUserThroughPrompts = async () => {
-  const { relativeProjectPath } = await prompts(
+  const { relativeProjectPath } = (await prompts(
     {
       type: "text",
       initial: "react-email-starter",
@@ -15,7 +15,7 @@ export const askUserThroughPrompts = async () => {
       name: "relativeProjectPath",
     },
     { onCancel: () => process.exit(0) },
-  ) as { relativeProjectPath: string };
+  )) as { relativeProjectPath: string };
 
   let baseDirectory = process.cwd();
 
@@ -28,7 +28,7 @@ export const askUserThroughPrompts = async () => {
       globOnlyWorkspaces.filter(isFirstDepthGlob);
 
     if (firstDepthGlobOnlyWorkspaces.length > 0) {
-      const { shouldAddAsWorkspaceAnswer } = await prompts(
+      const { shouldAddAsWorkspaceAnswer } = (await prompts(
         {
           type: "confirm",
           initial: true,
@@ -38,10 +38,10 @@ export const askUserThroughPrompts = async () => {
         {
           onCancel: () => process.exit(0),
         },
-      ) as { shouldAddAsWorkspaceAnswer: boolean };
+      )) as { shouldAddAsWorkspaceAnswer: boolean };
 
       if (shouldAddAsWorkspaceAnswer) {
-        const { globWorkspaceToAddTo } = await prompts({
+        const { globWorkspaceToAddTo } = (await prompts({
           type: "select",
           choices: firstDepthGlobOnlyWorkspaces.map((glob) => ({
             title: glob,
@@ -49,7 +49,7 @@ export const askUserThroughPrompts = async () => {
           })),
           message: "Which glob should the workspace match with?",
           name: "globWorkspaceToAddTo",
-        }) as { globWorkspaceToAddTo: string };
+        })) as { globWorkspaceToAddTo: string };
 
         const workspacesDirectory = globWorkspaceToAddTo.split("*")[0];
 
@@ -63,7 +63,7 @@ export const askUserThroughPrompts = async () => {
 
   const absoluteProjectPath = path.resolve(baseDirectory, relativeProjectPath);
 
-  const { isTypescriptEnabled, isTailwindEnabled } = await prompts(
+  const { isTypescriptEnabled, isTailwindEnabled } = (await prompts(
     [
       {
         type: "confirm",
@@ -81,7 +81,7 @@ export const askUserThroughPrompts = async () => {
     {
       onCancel: () => process.exit(0),
     },
-  ) as { isTypescriptEnabled: boolean, isTailwindEnabled: boolean };
+  )) as { isTypescriptEnabled: boolean; isTailwindEnabled: boolean };
 
   return {
     absoluteProjectPath,

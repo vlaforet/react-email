@@ -8,7 +8,6 @@ import pkg from "../package.json";
 import { askUserThroughPrompts } from "./ask-user-through-prompts";
 import { createStarter } from "./create-starter";
 
-
 program
   .name("create-email")
   .version(pkg.version)
