@@ -5,28 +5,25 @@ import logSymbols from "log-symbols";
 import path from "node:path";
 import ora from "ora";
 import treeCli from "tree-cli";
+import { askUserThroughPrompts } from "./ask-user-through-prompts";
 import { createStarter } from "./create-starter";
+
+import pkg from "../package.json";
 
 program
   .name("create-email")
-  .version("0.0.19")
+  .version(pkg.version)
   .description("The easiest way to get started with React Email")
-  .addArgument(
-    new Argument(
-      "relativeProjectPath",
-      "relative path of where to initialize the project",
-    ).default("./react-email-starter"),
-  )
-  .action(async (relativeProjectPath) => {
+  .action(async () => {
+    const { isTailwindEnabled, isTypescriptEnabled, absoluteProjectPath } = await askUserThroughPrompts();
+
     const spinner = ora("Preparing files...\n").start();
 
-    const projectPath = path.resolve(process.cwd(), relativeProjectPath).trim();
-
-    await createStarter(relativeProjectPath);
+    await createStarter({ absoluteProjectPath, enableTypeScript: isTypescriptEnabled, enableTailwindCSS: isTailwindEnabled });
 
     const { report } = await treeCli({
       l: 4,
-      base: projectPath,
+      base: absoluteProjectPath,
     });
 
     console.log(report);
