@@ -59,7 +59,7 @@ export const askUserThroughPrompts = async () => {
     }
   }
 
-  let absoluteProjectPath = path.resolve(baseDirectory, relativeProjectPath);
+  const absoluteProjectPath = path.resolve(baseDirectory, relativeProjectPath);
 
   const { isTypescriptEnabled, isTailwindEnabled } = await prompts(
     [

@@ -4,10 +4,10 @@ import { program } from "commander";
 import logSymbols from "log-symbols";
 import ora from "ora";
 import treeCli from "tree-cli";
+import pkg from "../package.json";
 import { askUserThroughPrompts } from "./ask-user-through-prompts";
 import { createStarter } from "./create-starter";
 
-import pkg from "../package.json";
 
 program
   .name("create-email")

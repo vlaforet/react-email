@@ -2,11 +2,11 @@ import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-export type CreateServerMatadata = {
+export interface CreateServerMatadata {
   absoluteProjectPath: string;
   enableTypeScript: boolean;
   enableTailwindCSS: boolean;
-};
+}
 
 const updatePackageJsonToMatchFolderName = async (
   absoluteProjectPath: string,
