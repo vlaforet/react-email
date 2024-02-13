@@ -1,4 +1,6 @@
 import path from "node:path";
+// Not using named export as default here, though they are the same name.
+// eslint-disable-next-line import/no-named-as-default
 import prompts from "prompts";
 import { getMonorepoMetadata } from "./monorepos/get-monorepo-metadata";
 import { isGlob } from "./globs/is-glob";
@@ -13,7 +15,7 @@ export const askUserThroughPrompts = async () => {
       name: "relativeProjectPath",
     },
     { onCancel: () => process.exit(0) },
-  );
+  ) as { relativeProjectPath: string };
 
   let baseDirectory = process.cwd();
 
@@ -36,7 +38,7 @@ export const askUserThroughPrompts = async () => {
         {
           onCancel: () => process.exit(0),
         },
-      );
+      ) as { shouldAddAsWorkspaceAnswer: boolean };
 
       if (shouldAddAsWorkspaceAnswer) {
         const { globWorkspaceToAddTo } = await prompts({
@@ -47,7 +49,7 @@ export const askUserThroughPrompts = async () => {
           })),
           message: "Which glob should the workspace match with?",
           name: "globWorkspaceToAddTo",
-        });
+        }) as { globWorkspaceToAddTo: string };
 
         const workspacesDirectory = globWorkspaceToAddTo.split("*")[0];
 
@@ -79,7 +81,7 @@ export const askUserThroughPrompts = async () => {
     {
       onCancel: () => process.exit(0),
     },
-  );
+  ) as { isTypescriptEnabled: boolean, isTailwindEnabled: boolean };
 
   return {
     absoluteProjectPath,
