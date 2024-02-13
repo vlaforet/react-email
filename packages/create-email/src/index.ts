@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import { Argument, program } from "@commander-js/extra-typings";
+import { program } from "commander";
 import logSymbols from "log-symbols";
-import path from "node:path";
 import ora from "ora";
 import treeCli from "tree-cli";
 import { askUserThroughPrompts } from "./ask-user-through-prompts";
