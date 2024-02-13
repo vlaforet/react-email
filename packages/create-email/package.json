@@ -40,6 +40,10 @@
     "create-email": "dist/index.js"
   },
   "devDependencies": {
-    "prettier": "3.0.0"
+    "@typescript-eslint/parser": "7.0.1",
+    "eslint-config-custom": "workspace:*",
+    "prettier": "3.0.0",
+    "tsconfig": "workspace:*",
+    "vitest": "1.2.2"
   }
 }
