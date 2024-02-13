@@ -14,11 +14,16 @@ program
   .version(pkg.version)
   .description("The easiest way to get started with React Email")
   .action(async () => {
-    const { isTailwindEnabled, isTypescriptEnabled, absoluteProjectPath } = await askUserThroughPrompts();
+    const { isTailwindEnabled, isTypescriptEnabled, absoluteProjectPath } =
+      await askUserThroughPrompts();
 
     const spinner = ora("Preparing files...\n").start();
 
-    await createStarter({ absoluteProjectPath, enableTypeScript: isTypescriptEnabled, enableTailwindCSS: isTailwindEnabled });
+    await createStarter({
+      absoluteProjectPath,
+      enableTypeScript: isTypescriptEnabled,
+      enableTailwindCSS: isTailwindEnabled,
+    });
 
     const { report } = await treeCli({
       l: 4,
