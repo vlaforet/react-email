@@ -5,12 +5,15 @@ import { isGlob } from "./globs/is-glob";
 import { isFirstDepthGlob } from "./globs/is-first-depth-glob";
 
 export const askUserThroughPrompts = async () => {
-  const { relativeProjectPath } = await prompts({
-    type: "text",
-    initial: "react-email-starter",
-    message: "What will your project be named?",
-    name: "relativeProjectPath",
-  });
+  const { relativeProjectPath } = await prompts(
+    {
+      type: "text",
+      initial: "react-email-starter",
+      message: "What will your project be named?",
+      name: "relativeProjectPath",
+    },
+    { onCancel: () => process.exit(0) },
+  );
 
   let baseDirectory = process.cwd();
 
@@ -19,15 +22,21 @@ export const askUserThroughPrompts = async () => {
     const globOnlyWorkspaces = monorepoMetadata.workspaceGlobs.filter(isGlob);
 
     // only globs like packages/*
-    const firstDepthGlobOnlyWorkspaces = globOnlyWorkspaces.filter(isFirstDepthGlob);
+    const firstDepthGlobOnlyWorkspaces =
+      globOnlyWorkspaces.filter(isFirstDepthGlob);
 
     if (firstDepthGlobOnlyWorkspaces.length > 0) {
-      const { shouldAddAsWorkspaceAnswer } = await prompts({
-        type: "confirm",
-        initial: true,
-        message: `We noticed you have a monorepo there. Would you like to add ${relativeProjectPath} as one of the workspaces?`,
-        name: "shouldAddAsWorkspaceAnswer",
-      });
+      const { shouldAddAsWorkspaceAnswer } = await prompts(
+        {
+          type: "confirm",
+          initial: true,
+          message: `We noticed you have a monorepo there. Would you like to add ${relativeProjectPath} as one of the workspaces?`,
+          name: "shouldAddAsWorkspaceAnswer",
+        },
+        {
+          onCancel: () => process.exit(0),
+        },
+      );
 
       if (shouldAddAsWorkspaceAnswer) {
         const { globWorkspaceToAddTo } = await prompts({
@@ -52,20 +61,25 @@ export const askUserThroughPrompts = async () => {
 
   let absoluteProjectPath = path.resolve(baseDirectory, relativeProjectPath);
 
-  const { isTypescriptEnabled, isTailwindEnabled } = await prompts([
+  const { isTypescriptEnabled, isTailwindEnabled } = await prompts(
+    [
+      {
+        type: "confirm",
+        initial: true,
+        message: "Would you like to use TypeScript?",
+        name: "isTypescriptEnabled",
+      },
+      {
+        type: "confirm",
+        initial: true,
+        message: "Would you like to use Tailwind CSS?",
+        name: "isTailwindEnabled",
+      },
+    ],
     {
-      type: "confirm",
-      initial: true,
-      message: "Would you like to use TypeScript?",
-      name: "isTypescriptEnabled",
+      onCancel: () => process.exit(0),
     },
-    {
-      type: "confirm",
-      initial: true,
-      message: "Would you like to use Tailwind CSS?",
-      name: "isTailwindEnabled",
-    },
-  ]);
+  );
 
   return {
     absoluteProjectPath,
