@@ -21,11 +21,13 @@ export const setupHotreloading = async (
     });
   });
 
-  const watcher = watch(emailDirRelativePath, {
+  const absolutePathToEmailsDirectory = path.resolve(
+    process.cwd(),
+    emailDirRelativePath,
+  );
+  const watcher = watch('', {
     ignoreInitial: true,
-    cwd: path.resolve(process.cwd()),
-    // eslint-disable-next-line prefer-named-capture-group
-    ignored: /(^|[/\\])\../,
+    cwd: absolutePathToEmailsDirectory
   });
 
   const exit = () => {
@@ -47,10 +49,6 @@ export const setupHotreloading = async (
     changes = [];
   }, 150);
 
-  const absolutePathToEmailsDirectory = path.resolve(
-    process.cwd(),
-    emailDirRelativePath,
-  );
   const [dependencyGraph, updateDependencyGraph] = await createDependencyGraph(
     absolutePathToEmailsDirectory,
   );
@@ -60,16 +58,17 @@ export const setupHotreloading = async (
     if (file.length === 0) {
       return;
     }
-    const pathToChangeTarget = path.resolve(
-      process.cwd(),
-      relativePathToChangeTarget,
-    );
-    await updateDependencyGraph(event, pathToChangeTarget);
+    await updateDependencyGraph(event, relativePathToChangeTarget);
 
     changes.push({
       event,
       filename: relativePathToChangeTarget,
     });
+
+    const pathToChangeTarget = path.resolve(
+      absolutePathToEmailsDirectory,
+      relativePathToChangeTarget,
+    );
     changes.push(
       ...(dependencyGraph[pathToChangeTarget]?.dependentPaths ?? []).map(
         (dependentPath) => ({

@@ -52,8 +52,7 @@ const setNextEnvironmentVariablesForBuild = async (
     ...getEnvVariablesForPreviewApp(
       // If we don't do normalization here, stuff like https://github.com/resend/react-email/issues/1354 happens.
       path.normalize(emailsDirRelativePath),
-      'PLACEHOLDER',
-      'PLACEHOLDER',
+      'PLACEHOLDER'
     ),
     NEXT_PUBLIC_IS_BUILDING: 'true',
   };

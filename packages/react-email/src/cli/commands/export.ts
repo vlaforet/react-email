@@ -5,7 +5,7 @@ import { buildSync } from 'esbuild';
 import ora from 'ora';
 import logSymbols from 'log-symbols';
 import type { Options } from '@react-email/render';
-import { render } from '@react-email/render';
+import { renderAsync } from '@react-email/render';
 import normalize from 'normalize-path';
 import { cp } from 'shelljs';
 import { closeOraOnSIGNIT } from '../utils/close-ora-on-sigint';
@@ -94,13 +94,13 @@ export const exportTemplates = async (
     },
   );
 
-  for (const template of allBuiltTemplates) {
+  for await (const template of allBuiltTemplates) {
     try {
       spinner.text = `rendering ${template.split('/').pop()}`;
       spinner.render();
       delete require.cache[template];
       const component = require(template);
-      const rendered = render(component.default({}), options);
+      const rendered = await renderAsync(component.default({}), options);
       const htmlPath = template.replace(
         '.cjs',
         options.plainText ? '.txt' : '.html',
