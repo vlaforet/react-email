@@ -12,9 +12,6 @@ module.exports = {
 
     return config;
   },
-  compiler: {
-    removeConsole: false
-  },
   experimental: {
     serverComponentsExternalPackages: [
       '@react-email/components',
