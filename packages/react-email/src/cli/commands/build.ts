@@ -48,23 +48,17 @@ const setNextEnvironmentVariablesForBuild = async (
   emailsDirRelativePath: string,
   builtPreviewAppPath: string,
 ) => {
-  const envVariables = {
-    ...getEnvVariablesForPreviewApp(
-      // If we don't do normalization here, stuff like https://github.com/resend/react-email/issues/1354 happens.
-      path.normalize(emailsDirRelativePath),
-      'PLACEHOLDER'
-    ),
-    NEXT_PUBLIC_IS_BUILDING: 'true',
-  };
-
   const nextConfigContents = `
 const path = require('path');
+const emailsDirRelativePath = path.normalize('${emailsDirRelativePath}');
+const userProjectLocation = path.resolve(process.cwd(), '../');
 /** @type {import('next').NextConfig} */
 module.exports = {
   env: {
-    ...${JSON.stringify(envVariables)},
-    NEXT_PUBLIC_USER_PROJECT_LOCATION: path.resolve(process.cwd(), '../'),
-    NEXT_PUBLIC_CLI_PACKAGE_LOCATION: process.cwd(),
+    NEXT_PUBLIC_IS_BUILDING: 'true',
+    EMAILS_DIR_RELATIVE_PATH: emailsDirRelativePath,
+    EMAILS_DIR_ABSOLUTE_PATH: path.resolve(userProjectLocation, emailsDirRelativePath),
+    USER_PROJECT_LOCATION: userProjectLocation
   },
   // this is needed so that the code for building emails works properly
   webpack: (
@@ -146,6 +140,17 @@ const forceSSGForEmailPreviews = async (
     emailsDirPath,
   ).map((slug) => ({ slug }));
 
+  const layoutContents = await fs.promises.readFile(
+    path.resolve(builtPreviewAppPath, './src/app/layout.tsx'),
+    'utf8'
+  );
+
+  await fs.promises.writeFile(
+    path.resolve(builtPreviewAppPath, './src/app/layout.tsx'),
+    layoutContents.replace("export const dynamic = 'force-dynamic';", ''),
+    'utf8'
+  );
+
   await fs.promises.appendFile(
     path.resolve(builtPreviewAppPath, './src/app/preview/[...slug]/page.tsx'),
     `
@@ -168,7 +173,6 @@ const updatePackageJson = async (builtPreviewAppPath: string) => {
   packageJson.scripts.build = 'next build';
   packageJson.scripts.start = 'next start';
 
-  packageJson.dependencies.sharp = '0.33.2';
   await fs.promises.writeFile(
     packageJsonPath,
     JSON.stringify(packageJson),
