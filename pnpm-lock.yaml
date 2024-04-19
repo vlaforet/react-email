@@ -620,9 +620,6 @@ importers:
       '@react-email/render':
         specifier: 0.0.12
         version: link:../render
-      babel-walk:
-        specifier: 3.0.0
-        version: 3.0.0
       chalk:
         specifier: 4.1.2
         version: 4.1.2
@@ -4606,13 +4603,6 @@ packages:
     dependencies:
       dequal: 2.0.3
     dev: true
-
-  /babel-walk@3.0.0:
-    resolution: {integrity: sha512-fdRxJkQ9MUSEi4jH2DcV3FAPFktk0wefilxrwNyUuWpoWawQGN7G7cB+fOYTtFfI6XNkFgwqJ/D3G18BoJJ/jg==}
-    engines: {node: '>= 10.0.0'}
-    dependencies:
-      '@babel/types': 7.24.0
-    dev: false
 
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
